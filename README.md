@@ -16,7 +16,7 @@ A local [MCP](https://modelcontextprotocol.io/) server that lets you manage Canv
 ### 2. Install
 
 ```bash
-git clone <repo-url> && cd canvas-mcp-local
+git clone https://github.com/cal-poly-dxhub/canvas-mcp && cd canvas-mcp-local
 pip install .
 ```
 
@@ -32,11 +32,9 @@ That's it — the server is now listening on stdio for MCP messages.
 
 ---
 
-## Connect to Your MCP Client
+### Kiro
 
-### Claude Desktop
-
-Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+Add to your Kiro MCP configuration:
 
 ```json
 {
@@ -52,9 +50,25 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-### Kiro
+### Claude Code
 
-Add to your Kiro MCP configuration:
+```bash
+claude mcp add canvas -- canvas-mcp
+```
+
+Set credentials before launching:
+
+```bash
+export CANVAS_API_TOKEN="your-token-here"
+export CANVAS_BASE_URL="https://myschool.instructure.com"
+claude
+```
+
+## Connect to Your MCP Client
+
+### Claude Desktop
+
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
 
 ```json
 {
