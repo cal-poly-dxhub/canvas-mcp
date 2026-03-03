@@ -99,6 +99,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 | Tool | Description |
 |------|-------------|
 | `list_upcoming_assignments` | Upcoming assignments across all courses (1–60 days ahead) |
+| `list_course_assignments` | List all assignments in a course (id, name, due date, points) |
 | `check_submission_status` | Check if you've submitted a specific assignment |
 | `view_my_grades` | Your grades for all assignments in a course |
 | `view_todo_list` | Your Canvas TODO list |
@@ -131,7 +132,7 @@ The agent calls: `list_upcoming_assignments(days_ahead=7)` → returns assignmen
 
 > "Did I submit the Lab 3 assignment for CS 101?"
 
-The agent calls: `get_my_courses` → `check_submission_status(course_id, assignment_id)` → returns submitted_at, late, missing, score
+The agent calls: `get_my_courses` → `list_course_assignments(course_id)` → `check_submission_status(course_id, assignment_id)` → returns submitted_at, late, missing, score
 
 ### Student: "How am I doing in this class?"
 
@@ -161,7 +162,7 @@ The agent chains: `get_my_courses` → `create_course_module` → `create_course
 
 > "How did students do on the Week 3 Problem Set in Math 200?"
 
-The agent calls: `get_my_courses` → `get_assignment_grade_summary` → returns avg, high, low, submission count, missing count
+The agent calls: `get_my_courses` → `list_course_assignments(course_id)` → `get_assignment_grade_summary` → returns avg, high, low, submission count, missing count
 
 ### Instructor: Find course files
 

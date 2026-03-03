@@ -24,6 +24,7 @@ from .canvas_client import (
     canvas_token_var,
     canvas_base_url_var,
     list_courses,
+    list_assignments,
     get_upcoming_assignments,
     get_submission_status,
     get_my_grades,
@@ -70,6 +71,17 @@ def list_upcoming_assignments(days_ahead: int = 14) -> str:
         days_ahead: How many days ahead to look (1-60). Defaults to 14.
     """
     return get_upcoming_assignments(days_ahead)
+
+
+@mcp.tool()
+@_safe_tool
+def list_course_assignments(course_id: int) -> str:
+    """List all assignments in a course with their IDs, names, due dates, and points.
+
+    Args:
+        course_id: The Canvas course ID.
+    """
+    return list_assignments(course_id)
 
 
 @mcp.tool()

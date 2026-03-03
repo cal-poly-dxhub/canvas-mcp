@@ -175,6 +175,20 @@ def get_upcoming_assignments(days_ahead: int = 14) -> str:
     return json.dumps({"assignments": out})
 
 
+def list_assignments(course_id: int) -> str:
+    assignments = canvas_get(
+        f"/api/v1/courses/{course_id}/assignments",
+        params={"per_page": _MAX_PER_PAGE},
+    )
+    out = [
+        {"id": a.get("id"), "name": a.get("name"), "due_at": a.get("due_at"),
+         "points_possible": a.get("points_possible"), "html_url": a.get("html_url"),
+         "published": a.get("published")}
+        for a in (assignments or []) if a.get("id")
+    ]
+    return json.dumps({"assignments": out})
+
+
 def get_submission_status(course_id: int, assignment_id: int) -> str:
     sub = canvas_get(f"/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions/self")
     return json.dumps({"late": sub.get("late"), "missing": sub.get("missing"), "submitted_at": sub.get("submitted_at"), "graded_at": sub.get("graded_at"), "workflow_state": sub.get("workflow_state"), "score": sub.get("score")})
