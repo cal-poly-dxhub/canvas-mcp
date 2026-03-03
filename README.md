@@ -20,7 +20,9 @@ git clone https://github.com/cal-poly-dxhub/canvas-mcp && cd canvas-mcp-local
 pip install .
 ```
 
-### 3. Run
+### 3. Run (standalone / local testing only)
+
+> **If you're using an MCP client like Kiro, Claude Code, or Claude Desktop, skip this step.** The client launches the server automatically.
 
 ```bash
 export CANVAS_API_TOKEN="your-token-here"
@@ -28,7 +30,7 @@ export CANVAS_BASE_URL="https://myschool.instructure.com"
 canvas-mcp
 ```
 
-That's it — the server is now listening on stdio for MCP messages.
+The server is now listening on stdio for MCP messages.
 
 ---
 
@@ -50,13 +52,15 @@ Add to your Kiro MCP configuration:
 }
 ```
 
+> **Note:** You do not need to manually export environment variables or start the server. Kiro automatically launches the MCP server and injects the credentials from the `env` block above.
+
 ### Claude Code
 
 ```bash
 claude mcp add canvas -- canvas-mcp
 ```
 
-Set credentials before launching:
+Set credentials before launching, since Claude Code inherits environment variables from your shell:
 
 ```bash
 export CANVAS_API_TOKEN="your-token-here"
