@@ -52,6 +52,12 @@ Add to your Kiro MCP configuration:
 }
 ```
 
+Run the new agent under kiro-cli as follows
+
+```bash
+kiro-cli --agent canvas-agent
+```
+
 > **Note:** You do not need to manually export environment variables or start the server. Kiro automatically launches the MCP server and injects the credentials from the `env` block above.
 
 ### Claude Code
