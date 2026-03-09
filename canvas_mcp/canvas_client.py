@@ -231,6 +231,19 @@ def search_course_files(course_id: int, search_term: str = "") -> str:
     return json.dumps({"files": out})
 
 
+def list_modules(course_id: int) -> str:
+    modules = canvas_get(
+        f"/api/v1/courses/{course_id}/modules",
+        params={"per_page": _MAX_PER_PAGE},
+    )
+    out = [
+        {"id": m.get("id"), "name": m.get("name"), "position": m.get("position"),
+         "published": m.get("published"), "items_count": m.get("items_count")}
+        for m in (modules or []) if m.get("id")
+    ]
+    return json.dumps({"modules": out})
+
+
 def create_module(course_id: int, name: str, position: Optional[int] = None) -> str:
     payload: Dict[str, Any] = {"module": {"name": name}}
     if position is not None:

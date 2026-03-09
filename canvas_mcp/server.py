@@ -31,6 +31,7 @@ from .canvas_client import (
     get_todo_items,
     create_canvas_event,
     search_course_files,
+    list_modules,
     create_module,
     add_module_item,
     create_assignment,
@@ -148,6 +149,17 @@ def find_course_files(course_id: int, search_term: str = "") -> str:
         search_term: Optional keyword to filter files by name.
     """
     return search_course_files(course_id, search_term)
+
+
+@mcp.tool()
+@_safe_tool
+def list_course_modules(course_id: int) -> str:
+    """List all modules in a course with their IDs, names, positions, and item counts.
+
+    Args:
+        course_id: The Canvas course ID.
+    """
+    return list_modules(course_id)
 
 
 @mcp.tool()
