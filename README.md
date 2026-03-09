@@ -117,6 +117,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 |------|-------------|
 | `get_my_courses` | List your active courses |
 | `find_course_files` | Search or list files in a course |
+| `list_course_modules` | List all modules in a course (id, name, position, item count) |
 | `create_course_module` | Create a new module |
 | `add_item_to_module` | Add an item to an existing module |
 | `create_course_assignment` | Create an assignment (draft by default) |
