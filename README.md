@@ -52,7 +52,7 @@ A local [MCP](https://modelcontextprotocol.io/) server that lets you manage Canv
 ### 2. Install
 
 ```bash
-git clone https://github.com/cal-poly-dxhub/canvas-mcp && cd canvas-mcp-local
+git clone https://github.com/cal-poly-dxhub/canvas-mcp && cd canvas-mcp
 pip install .
 ```
 
