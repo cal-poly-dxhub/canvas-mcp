@@ -78,7 +78,7 @@ Add to your Kiro MCP configuration:
 {
   "mcpServers": {
     "canvas": {
-      "command": "canvas-mcp",
+      "command": "/path/to/venv/bin/canvas-mcp",
       "env": {
         "CANVAS_API_TOKEN": "your-token-here",
         "CANVAS_BASE_URL": "https://myschool.instructure.com"
