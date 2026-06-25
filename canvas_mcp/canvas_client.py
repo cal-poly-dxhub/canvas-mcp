@@ -288,6 +288,90 @@ def create_page(course_id: int, title: str, body: str = "", published: bool = Fa
     return json.dumps({"page_id": res.get("page_id"), "url": res.get("url"), "title": res.get("title"), "html_url": res.get("html_url")})
 
 
+def list_all_submissions(course_id: int, assignment_id: int) -> str:
+    """Fetch all student submissions for an assignment, including body text, file attachments, and user info."""
+    subs = canvas_get(
+        f"/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions",
+        params={"per_page": _MAX_PER_PAGE, "include[]": "user"},
+    )
+    out = []
+    for s in subs or []:
+        user = s.get("user") or {}
+        if s.get("workflow_state") == "unsubmitted" and not s.get("submitted_at"):
+            continue
+        attachments = [
+            {"id": a.get("id"), "display_name": a.get("display_name"),
+             "url": a.get("url"), "content_type": a.get("content-type"),
+             "size": a.get("size")}
+            for a in (s.get("attachments") or [])
+        ]
+        out.append({
+            "user_id": s.get("user_id"),
+            "student_name": user.get("name") or user.get("sortable_name"),
+            "submitted_at": s.get("submitted_at"),
+            "score": s.get("score"),
+            "workflow_state": s.get("workflow_state"),
+            "late": s.get("late"),
+            "body": s.get("body"),
+            "attachments": attachments,
+            "url": s.get("url"),
+            "preview_url": s.get("preview_url"),
+        })
+    return json.dumps({"submissions": out, "total": len(out)})
+
+
+def download_submission_files(course_id: int, assignment_id: int, download_dir: str) -> str:
+    """Download all file attachments for an assignment's submissions to a local directory.
+
+    Creates a subfolder per student and downloads their attached files.
+    Returns a summary of downloaded files.
+    """
+    import os
+    import re
+
+    os.makedirs(download_dir, exist_ok=True)
+    subs = canvas_get(
+        f"/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions",
+        params={"per_page": _MAX_PER_PAGE, "include[]": "user"},
+    )
+    session = _make_session()
+    downloaded: List[Dict[str, Any]] = []
+
+    def _sanitize(name: str) -> str:
+        return re.sub(r'[^\w\s\-.]', '', name).strip()
+
+    for s in subs or []:
+        user = s.get("user") or {}
+        if s.get("workflow_state") == "unsubmitted" and not s.get("submitted_at"):
+            continue
+        student_name = user.get("name") or user.get("sortable_name") or f"user_{s.get('user_id')}"
+        attachments = s.get("attachments") or []
+        if not attachments:
+            continue
+
+        student_dir = os.path.join(download_dir, _sanitize(student_name))
+        os.makedirs(student_dir, exist_ok=True)
+
+        for att in attachments:
+            file_url = att.get("url")
+            filename = _sanitize(att.get("display_name") or att.get("filename") or f"file_{att.get('id')}")
+            if not file_url:
+                continue
+            filepath = os.path.join(student_dir, filename)
+            resp = session.get(file_url, timeout=_REQUEST_TIMEOUT_SECONDS)
+            resp.raise_for_status()
+            with open(filepath, "wb") as f:
+                f.write(resp.content)
+            downloaded.append({
+                "student_name": student_name,
+                "filename": filename,
+                "path": filepath,
+                "size": len(resp.content),
+            })
+
+    return json.dumps({"downloaded": downloaded, "total_files": len(downloaded)})
+
+
 def get_grade_summary(course_id: int, assignment_id: int) -> str:
     subs = canvas_get(f"/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions", params={"per_page": _MAX_PER_PAGE})
     graded = submitted = missing = total = 0

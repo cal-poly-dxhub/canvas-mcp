@@ -38,6 +38,8 @@ from .canvas_client import (
     post_announcement,
     create_page,
     get_grade_summary,
+    list_all_submissions,
+    download_submission_files,
 )
 
 
@@ -246,6 +248,31 @@ def get_assignment_grade_summary(course_id: int, assignment_id: int) -> str:
         assignment_id: The Canvas assignment ID.
     """
     return get_grade_summary(course_id, assignment_id)
+
+
+@mcp.tool()
+@_safe_tool
+def get_all_submissions(course_id: int, assignment_id: int) -> str:
+    """Get all student submissions for an assignment, including submission body text, file attachments, and student names. Instructor-only.
+
+    Args:
+        course_id: The Canvas course ID.
+        assignment_id: The Canvas assignment ID.
+    """
+    return list_all_submissions(course_id, assignment_id)
+
+
+@mcp.tool()
+@_safe_tool
+def download_all_submission_files(course_id: int, assignment_id: int, download_dir: str) -> str:
+    """Download all file attachments from student submissions for an assignment to a local directory. Creates a subfolder per student. Instructor-only.
+
+    Args:
+        course_id: The Canvas course ID.
+        assignment_id: The Canvas assignment ID.
+        download_dir: Local directory path to save files into.
+    """
+    return download_submission_files(course_id, assignment_id, download_dir)
 
 
 def main():
